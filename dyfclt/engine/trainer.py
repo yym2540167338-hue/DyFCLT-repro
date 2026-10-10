@@ -16,17 +16,34 @@ from ..data.paired_coco import build_dataset, collate_fn
 from ..evaluation.cocoeval_ext import evaluate as coco_evaluate
 from ..models.detector import build_criterion, build_model, build_postprocessor
 from ..utils import dist as du
+from ..utils.envinfo import cuda_problems
+from ..utils.envinfo import describe as describe_env
 from .optim import ModelEMA, WarmupStepLR, build_optimizer, de_parallel
 
 
 def get_device(pref="auto"):
+    """'cuda' fails loudly when no GPU is usable; 'auto' picks cuda > mps > cpu and warns on cpu."""
+    if pref.startswith("cuda") and not torch.cuda.is_available():
+        lines, _ = describe_env()
+        raise RuntimeError("requested --device cuda, but PyTorch cannot see a CUDA GPU.\n" + "\n".join(lines) +
+                           "\n可能原因：\n" + "\n".join(f"  - {p}" for p in cuda_problems()) +
+                           "\n（详细检查：python tools/check_env.py）")
     if pref != "auto":
         return torch.device(pref)
     if torch.cuda.is_available():
         return torch.device("cuda")
     if torch.backends.mps.is_available():
         return torch.device("mps")
+    print("!" * 80 + "\nWARNING: no CUDA GPU / MPS found, running on CPU (extremely slow).\n" +
+          "\n".join(f"  - {p}" for p in cuda_problems()) + "\n" + "!" * 80, flush=True)
     return torch.device("cpu")
+
+
+def env_summary(device):
+    s = f"torch {torch.__version__} (CUDA {torch.version.cuda}), python {sys.executable}"
+    if device.type == "cuda":
+        s += f", GPU {torch.cuda.get_device_name(device)} x{torch.cuda.device_count()} visible"
+    return s
 
 
 def set_seed(seed):
@@ -165,6 +182,8 @@ def save_checkpoint(path, model, optimizer, scheduler, ema, epoch, cfg, best, we
 
 
 def train(cfg, resume=None, device_pref="auto"):
+    if device_pref.startswith("cuda"):
+        get_device(device_pref)  # raises with a diagnosis instead of silently training on the CPU
     local_rank = du.init_distributed()
     distributed = local_rank is not None
     if distributed:
@@ -175,9 +194,16 @@ def train(cfg, resume=None, device_pref="auto"):
     out_dir = cfg["output_dir"]
     os.makedirs(out_dir, exist_ok=True)
     log_path = os.path.join(out_dir, "log.txt")
+    if not resume and du.is_main_process():  # fresh run: keep logs of an earlier attempt apart
+        stamp = time.strftime("%Y%m%d-%H%M%S")
+        for name in ("log.txt", "metrics.jsonl"):
+            p = os.path.join(out_dir, name)
+            if os.path.isfile(p):
+                os.replace(p, f"{p}.{stamp}.old")
     if du.is_main_process():
         dump_config(cfg, os.path.join(out_dir, "config.yaml"))
     log(f"device={device} world_size={du.get_world_size()} output_dir={out_dir}", log_path)
+    log(env_summary(device), log_path)
 
     model = build_model(cfg).to(device)
     n_params = sum(p.numel() for p in model.parameters())

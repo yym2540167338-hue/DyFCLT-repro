@@ -39,7 +39,23 @@ GPU 服务器（Linux + NVIDIA）：
 bash environment/setup_server_cuda.sh cu121
 ```
 
-脚本会创建 conda 环境 `dyfclt`（Python 3.11 + torch 2.4.1），安装依赖，下载 RT-DETR 的 ImageNet 预训练 PResNet50-vd 权重到 `pretrained/`（约 94 MB），检查 cuFFT，并运行 `tests/test_pipeline.py`。驱动较旧时改用 `cu118`。服务器不能联网时，把本机的 `pretrained/*.pth` 拷过去即可。
+有 conda 时，脚本创建 conda 环境 `dyfclt`（Python 3.11）。没有 conda 时（报 `conda not found`），脚本会自动用机器上已有的 Python 3.8–3.12 在 `~/venvs/dyfclt` 建一个 venv；以后用 `source ~/venvs/dyfclt/bin/activate` 激活，`PYTHON=/path/to/python3.x` 可以指定用哪个 Python。如果集群用 module 管理软件，也可以先 `module load` 对应的 anaconda 模块。之后脚本安装 torch 2.4.1 和其余依赖，下载 RT-DETR 的 ImageNet 预训练 PResNet50-vd 权重到 `pretrained/`（约 94 MB），运行 `tests/test_pipeline.py`，最后用 `tools/check_env.py` 检查 GPU。驱动较旧时改用 `cu118`。服务器不能联网时，把本机的 `pretrained/*.pth` 拷过去即可。
+
+注意不要用 `pip install --user` 装 PyTorch。装到 `~/.local` 的包会覆盖同版本 Python 环境里的包。如果以前这样装过，运行前先 `export PYTHONNOUSERSITE=1`。
+
+**在集群上（如 `/public/home/...` 这类 Slurm 超算）**：登录节点一般不能用显卡，直接在登录节点上运行会报 `CUDA unknown error`，然后退回 CPU。环境安装在登录节点做（需要联网）；训练要申请 GPU 节点，可以提交作业：
+
+```bash
+sbatch -p <GPU分区名> scripts/slurm_train.sbatch scripts/run_droneperson.sh
+```
+
+也可以先申请一个交互式 GPU 节点，在里面运行 `python tools/check_env.py`，再运行 `scripts/run_*.sh`：
+
+```bash
+srun -p <GPU分区名> --gres=gpu:1 -c 8 --mem=64G -t 48:00:00 --pty bash
+```
+
+分区名和 GPU 型号用 `sinfo -o "%P %G %l"` 查看。有的集群申请 GPU 要写 `--gpus=1`，不是 `--gres=gpu:1`。
 
 Mac（Apple Silicon，仅用于调试）：
 
@@ -74,6 +90,12 @@ python tools/prepare_rgbt_tiny.py --root data/RGBT-Tiny --train-list <训练序�
 **FLIR-aligned**：下载 Zhang et al. 的 aligned 版本（作者 Google Drive，或 HuggingFace `jsonhash/FLIR_aligned` 的 `aligned.zip`），解压到 `data/FLIR_aligned/`，然后运行 `python tools/prepare_flir_aligned.py --root data/FLIR_aligned`。如果目录结构不同，按脚本参数调整。
 
 ## 3. 训练与测试
+
+先确认 PyTorch 能用上显卡（脚本开头也会自动检查）：
+
+```bash
+python tools/check_env.py
+```
 
 ```bash
 NGPU=1 bash scripts/run_droneperson.sh            # Table 2：DyFCLT + 基线，训练→测试→与论文对比
@@ -118,6 +140,9 @@ python tools/compare_with_paper.py --dataset rgbt_tiny --table ablation_table4 \
 
 | 现象 | 原因与解决 |
 |---|---|
+| 训练没有用显卡（`log.txt` 第一行显示 `device=cpu`，或 nvidia-smi 里看不到进程） | PyTorch 看不到 CUDA。运行 `python tools/check_env.py`，它会列出具体原因：在集群登录节点上或作业没申请 GPU、CPU 版 PyTorch、用了 `~/.local` 里的 PyTorch、没有 `conda activate dyfclt`、驱动太旧、`CUDA_VISIBLE_DEVICES` 屏蔽了显卡。`scripts/*.sh` 默认 `DEVICE=cuda`，看不到 GPU 时会直接停止，不会在 CPU 上空跑 |
+| `UserWarning: CUDA initialization: CUDA unknown error` | 驱动在，但这个进程没有分到显卡，几乎都是因为在登录节点上运行，或者 Slurm 作业没加 `--gres=gpu:1`。按第 1 节在 GPU 节点上运行；如果已经在 GPU 节点上还报这个错，联系管理员检查节点驱动 |
+| `log.txt` 显示 `device=cuda`，但 GPU 利用率很低 | 显卡其实在用。利用率低通常是因为正在评测（逐框匹配在 CPU 上）或数据加载跟不上，可以调大 `num_workers`。把 `python tools/summarize_run.py <输出目录>` 和 `nvidia-smi` 的输出发给我 |
 | `CUDA out of memory` | 减小 `train.batch_size`；多尺度最大 800，可设 `model.multi_scale=[480,512,544,576,608,640]`；或 `train.amp=bf16` |
 | loss 为 NaN / Inf（训练会自动停止并打印是哪一项） | 检查标注里是否有 w/h ≤ 0 的框（转换脚本已过滤）；先关闭 AMP；可降低 `optimizer.lr` 或把 `train.warmup_iters` 调大 |
 | cuFFT 报错 `only supports dimensions whose sizes are powers of two` | 半精度 FFT 的限制。DFCA 已强制在 fp32 下做 FFT；如果你改了代码，请保留 `_no_autocast` |
