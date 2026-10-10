@@ -1,0 +1,5 @@
+# Table 4 row 1: no DFCA, no IBS, no FREF (DyFCLT skeleton)
+_base_: ../dyfclt.yaml
+model:
+  encoder: {use_dfca: false, use_ibs: false, use_fref: false}
+output_dir: outputs/rgbt_tiny_t4_none

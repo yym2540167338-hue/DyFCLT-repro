@@ -1,0 +1,127 @@
+seed: 0
+num_workers: 2
+model:
+  backbone:
+    type: presnet
+    depth: 50
+    variant: d
+    return_idx:
+    - 1
+    - 2
+    - 3
+    freeze_at: 0
+    freeze_norm: true
+    pretrained: true
+    pretrained_path: pretrained/ResNet50_vd_ssld_v2_pretrained_from_paddle.pth
+  encoder:
+    hidden_dim: 256
+    nhead: 8
+    dim_feedforward: 1024
+    dropout: 0.0
+    enc_act: gelu
+    num_encoder_layers: 1
+    act: silu
+    expansion: 1.0
+    depth_mult: 1.0
+    use_dfca: true
+    use_ibs: true
+    use_fref: true
+    use_pan: false
+    dfca:
+      num_bands: 3
+      learnable_bands: true
+      decouple: qkv
+      mask_mode: soft
+      band_temperature: 1.0
+      mod_kernel: 3
+      mod_groups: 1
+    sse:
+      reduction: 2
+      up_kernel: 5
+      mask_kernel: 3
+  decoder:
+    hidden_dim: 256
+    num_queries: 300
+    num_levels: 3
+    num_decoder_points: 4
+    nhead: 8
+    num_decoder_layers: 6
+    dim_feedforward: 1024
+    dropout: 0.0
+    activation: relu
+    num_denoising: 100
+    label_noise_ratio: 0.5
+    box_noise_scale: 1.0
+    eval_idx: -1
+  multi_scale: null
+criterion:
+  matcher:
+    cost_class: 2.0
+    cost_bbox: 5.0
+    cost_giou: 2.0
+    use_focal_loss: true
+    alpha: 0.25
+    gamma: 2.0
+  weight_dict:
+    loss_vfl: 1.0
+    loss_bbox: 5.0
+    loss_giou: 2.0
+    loss_mask: 1.0
+  losses:
+  - vfl
+  - boxes
+  alpha: 0.75
+  gamma: 2.0
+  mask_loss:
+    alpha: 0.7
+    beta: 0.3
+    gamma: 1.3333333
+postprocess:
+  num_top_queries: 300
+optimizer:
+  lr: 0.00025
+  backbone_lr: 2.5e-05
+  weight_decay: 0.0001
+  betas:
+  - 0.9
+  - 0.999
+train:
+  epochs: 2
+  batch_size: 2
+  clip_max_norm: 0.1
+  warmup_iters: 300
+  lr_milestones: []
+  amp: none
+  print_freq: 50
+  find_unused_parameters: false
+  max_iters_per_epoch: 600
+use_ema: true
+ema:
+  decay: 0.9999
+  warmups: 2000
+data:
+  input_size:
+  - 640
+  - 640
+  normalize: null
+  train_aug:
+    iou_crop_p: 0.8
+    hflip_p: 0.5
+    min_box_size: 1.0
+  img_root: data/RGBTDronePerson
+  train:
+    ann_file: data/RGBTDronePerson/annotations/train_paired.json
+  val:
+    ann_file: data/RGBTDronePerson/annotations/val_paired.json
+    max_images: 300
+eval:
+  batch_size: 4
+  interval: 1
+  protocol: tinyperson
+  key_metric: AP50
+num_classes: 3
+class_names:
+- person
+- rider
+- crowd
+output_dir: outputs/learncheck_droneperson_dyfclt

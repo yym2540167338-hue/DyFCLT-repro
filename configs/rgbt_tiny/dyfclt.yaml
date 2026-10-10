@@ -1,0 +1,12 @@
+# RGBT-Tiny (paper Table 1, Tables 4-6). Thermal annotations, SAFit-based COCO metrics (C = 32).
+_base_: ../_base_.yaml
+num_classes: 7
+class_names: [ship, car, cyclist, pedestrian, bus, drone, plane]
+data:
+  img_root: data/RGBT-Tiny
+  train: {ann_file: data/RGBT-Tiny/annotations/train_paired.json}
+  val: {ann_file: data/RGBT-Tiny/annotations/test_paired.json}
+train: {epochs: 20}
+# the test split is large: evaluate every 2 epochs (and always after the last one)
+eval: {protocol: safit, key_metric: AP, safit_c: 32.0, nwd_anchor: corner, interval: 2}
+output_dir: outputs/rgbt_tiny_dyfclt

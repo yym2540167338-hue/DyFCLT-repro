@@ -1,0 +1,5 @@
+# Dual-branch RT-DETR baseline ("add a modality branch to RT-DETR"): every branch is an RT-DETR HybridEncoder.
+_base_: dyfclt.yaml
+model:
+  encoder: {use_dfca: false, use_ibs: false, use_fref: false, use_pan: true}
+output_dir: outputs/droneperson_baseline

@@ -1,0 +1,5 @@
+# Table 4 row 4: DFCA + IBS (no FREF)
+_base_: ../dyfclt.yaml
+model:
+  encoder: {use_fref: false}
+output_dir: outputs/rgbt_tiny_t4_dfca_ibs

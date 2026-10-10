@@ -1,0 +1,12 @@
+# Local "does it learn" check on Apple MPS (16 GB): 1,200 iterations x batch 2 at 640 px
+# (~0.5 epoch of RGBTDronePerson). NOT the paper schedule (20 epochs, batch 8, multi-scale).
+_base_: ../droneperson/dyfclt.yaml
+num_workers: 2
+model:
+  backbone: {pretrained_path: pretrained/ResNet50_vd_ssld_v2_pretrained_from_paddle.pth}
+  multi_scale: null           # 800 px batches do not fit next to the OS in 16 GB
+data:
+  val: {max_images: 300}
+train: {epochs: 2, max_iters_per_epoch: 600, batch_size: 2, warmup_iters: 300, print_freq: 50}
+eval: {batch_size: 4}
+output_dir: outputs/learncheck_droneperson_dyfclt

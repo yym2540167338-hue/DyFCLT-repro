@@ -1,0 +1,34 @@
+device=mps world_size=1 output_dir=outputs/learncheck_droneperson_dyfclt
+params: 84.07M (trainable 84.01M)
+train images 4900, val images 300, classes ['person', 'rider', 'crowd']
+[epoch 0] it 50/600 lr 4.25e-05 1.89s/it eta 0:17:17 {'loss_vfl': 0.0982, 'loss_bbox': 0.7204, 'loss_giou': 2.229, 'loss_mask': 0.968, 'loss': 35.1076}
+[epoch 0] it 100/600 lr 8.42e-05 1.91s/it eta 0:15:53 {'loss_vfl': 0.3246, 'loss_bbox': 0.5091, 'loss_giou': 1.8872, 'loss_mask': 0.9664, 'loss': 32.0203}
+[epoch 0] it 150/600 lr 1.26e-04 1.96s/it eta 0:14:39 {'loss_vfl': 0.5245, 'loss_bbox': 0.3754, 'loss_giou': 1.6187, 'loss_mask': 0.9667, 'loss': 30.0579}
+[epoch 0] it 200/600 lr 1.68e-04 1.95s/it eta 0:13:00 {'loss_vfl': 0.6003, 'loss_bbox': 0.3101, 'loss_giou': 1.4736, 'loss_mask': 0.9637, 'loss': 28.8803}
+[epoch 0] it 250/600 lr 2.09e-04 1.96s/it eta 0:11:24 {'loss_vfl': 0.6459, 'loss_bbox': 0.272, 'loss_giou': 1.3919, 'loss_mask': 0.9545, 'loss': 28.1545}
+[epoch 0] it 300/600 lr 2.50e-04 1.97s/it eta 0:09:50 {'loss_vfl': 0.6885, 'loss_bbox': 0.2444, 'loss_giou': 1.3314, 'loss_mask': 0.9399, 'loss': 27.6389}
+[epoch 0] it 350/600 lr 2.50e-04 2.00s/it eta 0:08:19 {'loss_vfl': 0.7184, 'loss_bbox': 0.2258, 'loss_giou': 1.2847, 'loss_mask': 0.9242, 'loss': 27.2138}
+[epoch 0] it 400/600 lr 2.50e-04 2.04s/it eta 0:06:48 {'loss_vfl': 0.7448, 'loss_bbox': 0.2086, 'loss_giou': 1.2435, 'loss_mask': 0.9095, 'loss': 26.8037}
+[epoch 0] it 450/600 lr 2.50e-04 2.05s/it eta 0:05:07 {'loss_vfl': 0.7631, 'loss_bbox': 0.1961, 'loss_giou': 1.2109, 'loss_mask': 0.8958, 'loss': 26.4537}
+[epoch 0] it 500/600 lr 2.50e-04 2.06s/it eta 0:03:25 {'loss_vfl': 0.7816, 'loss_bbox': 0.1866, 'loss_giou': 1.1857, 'loss_mask': 0.8864, 'loss': 26.2256}
+[epoch 0] it 550/600 lr 2.50e-04 2.07s/it eta 0:01:43 {'loss_vfl': 0.789, 'loss_bbox': 0.1779, 'loss_giou': 1.165, 'loss_mask': 0.8794, 'loss': 25.984}
+[epoch 0] it 600/600 lr 2.50e-04 2.08s/it eta 0:00:00 {'loss_vfl': 0.796, 'loss_bbox': 0.1701, 'loss_giou': 1.1422, 'loss_mask': 0.8718, 'loss': 25.7274}
+[epoch 0] train done in 0:20:47 {'loss_vfl': 0.7960228815841643, 'loss_bbox': 0.17013388191660245, 'loss_giou': 1.1422287898262342, 'loss_mask': 0.8718117441733678, 'loss': 25.727354091008504}
+[epoch 0] band boundaries {'encoder.ir.dfca.0.fbd': [0.1233, 0.2487], 'encoder.ir.dfca.1.fbd': [0.1251, 0.2508], 'encoder.vis.dfca.0.fbd': [0.1259, 0.2501], 'encoder.vis.dfca.1.fbd': [0.1247, 0.2498]}
+[epoch 0] eval {"AP25": 13.833, "AP25_tiny": 13.23, "AP25_tiny1": 38.959, "AP25_tiny2": 31.455, "AP25_tiny3": 14.027, "AP25_small": 52.285, "AP25_reasonable": 25.743, "AP50": 9.875, "AP50_tiny": 9.684, "AP50_tiny1": 15.678, "AP50_tiny2": 20.63, "AP50_tiny3": 11.206, "AP50_small": 22.029, "AP50_reasonable": 16.832, "AP75": 0.724, "AP75_tiny": 0.745, "AP75_tiny1": 0.0, "AP75_tiny2": 1.118, "AP75_tiny3": 1.012, "AP75_small": 1.63, "AP75_reasonable": 0.0, "AR50": 70.739, "per_class_AP50": {"person": 18.537, "rider": 5.588, "crowd": 5.501}}
+[epoch 1] it 50/600 lr 2.50e-04 2.29s/it eta 0:20:57 {'loss_vfl': 0.9364, 'loss_bbox': 0.0781, 'loss_giou': 0.8821, 'loss_mask': 0.7885, 'loss': 23.2197}
+[epoch 1] it 100/600 lr 2.50e-04 2.20s/it eta 0:18:18 {'loss_vfl': 0.9503, 'loss_bbox': 0.0776, 'loss_giou': 0.8553, 'loss_mask': 0.7877, 'loss': 23.0441}
+[epoch 1] it 150/600 lr 2.50e-04 2.60s/it eta 0:19:30 {'loss_vfl': 0.9162, 'loss_bbox': 0.0809, 'loss_giou': 0.8747, 'loss_mask': 0.7845, 'loss': 22.9745}
+[epoch 1] it 200/600 lr 2.50e-04 2.77s/it eta 0:18:26 {'loss_vfl': 0.9198, 'loss_bbox': 0.0791, 'loss_giou': 0.8615, 'loss_mask': 0.7821, 'loss': 22.8695}
+[epoch 1] it 250/600 lr 2.50e-04 2.73s/it eta 0:15:54 {'loss_vfl': 0.9101, 'loss_bbox': 0.0779, 'loss_giou': 0.8564, 'loss_mask': 0.7774, 'loss': 22.7323}
+[epoch 1] it 300/600 lr 2.50e-04 2.74s/it eta 0:13:41 {'loss_vfl': 0.9046, 'loss_bbox': 0.0779, 'loss_giou': 0.8577, 'loss_mask': 0.777, 'loss': 22.66}
+[epoch 1] it 350/600 lr 2.50e-04 2.74s/it eta 0:11:24 {'loss_vfl': 0.8965, 'loss_bbox': 0.0781, 'loss_giou': 0.8617, 'loss_mask': 0.7784, 'loss': 22.6229}
+[epoch 1] it 400/600 lr 2.50e-04 2.73s/it eta 0:09:06 {'loss_vfl': 0.8916, 'loss_bbox': 0.0775, 'loss_giou': 0.8592, 'loss_mask': 0.7775, 'loss': 22.5379}
+[epoch 1] it 450/600 lr 2.50e-04 2.71s/it eta 0:06:45 {'loss_vfl': 0.8945, 'loss_bbox': 0.0786, 'loss_giou': 0.858, 'loss_mask': 0.777, 'loss': 22.5528}
+[epoch 1] it 500/600 lr 2.50e-04 2.69s/it eta 0:04:28 {'loss_vfl': 0.892, 'loss_bbox': 0.0785, 'loss_giou': 0.8573, 'loss_mask': 0.7761, 'loss': 22.5133}
+[epoch 1] it 550/600 lr 2.50e-04 2.66s/it eta 0:02:13 {'loss_vfl': 0.8947, 'loss_bbox': 0.0785, 'loss_giou': 0.8537, 'loss_mask': 0.7754, 'loss': 22.4988}
+[epoch 1] it 600/600 lr 2.50e-04 2.65s/it eta 0:00:00 {'loss_vfl': 0.8942, 'loss_bbox': 0.0787, 'loss_giou': 0.8536, 'loss_mask': 0.7751, 'loss': 22.4836}
+[epoch 1] train done in 0:26:27 {'loss_vfl': 0.8942059053232273, 'loss_bbox': 0.07874905041108529, 'loss_giou': 0.8535824047525724, 'loss_mask': 0.7750544260938962, 'loss': 22.483641732533773}
+[epoch 1] band boundaries {'encoder.ir.dfca.0.fbd': [0.1226, 0.2471], 'encoder.ir.dfca.1.fbd': [0.1221, 0.2504], 'encoder.vis.dfca.0.fbd': [0.1274, 0.2498], 'encoder.vis.dfca.1.fbd': [0.1247, 0.2533]}
+[epoch 1] eval {"AP25": 18.307, "AP25_tiny": 17.769, "AP25_tiny1": 59.732, "AP25_tiny2": 35.356, "AP25_tiny3": 17.398, "AP25_small": 43.604, "AP25_reasonable": 31.023, "AP50": 11.673, "AP50_tiny": 11.586, "AP50_tiny1": 17.76, "AP50_tiny2": 20.1, "AP50_tiny3": 12.503, "AP50_small": 11.346, "AP50_reasonable": 31.023, "AP75": 1.003, "AP75_tiny": 0.714, "AP75_tiny1": 0.0, "AP75_tiny2": 0.896, "AP75_tiny3": 0.964, "AP75_small": 2.57, "AP75_reasonable": 12.871, "AR50": 69.166, "per_class_AP50": {"person": 19.571, "rider": 4.612, "crowd": 10.836}}
+done. best {'metric': 11.673, 'epoch': 1, 'key': 'AP50'}

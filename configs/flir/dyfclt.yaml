@@ -1,0 +1,11 @@
+# FLIR-aligned (paper Table 3): 4,129 train / 1,013 test pairs, standard COCO metrics.
+_base_: ../_base_.yaml
+num_classes: 3
+class_names: [person, car, bicycle]
+data:
+  img_root: data/FLIR_aligned
+  train: {ann_file: data/FLIR_aligned/annotations/train_paired.json}
+  val: {ann_file: data/FLIR_aligned/annotations/test_paired.json}
+train: {epochs: 50}
+eval: {protocol: coco, key_metric: AP50}
+output_dir: outputs/flir_dyfclt

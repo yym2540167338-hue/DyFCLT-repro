@@ -1,0 +1,5 @@
+# Table 6: B=4 learnable
+_base_: ../dyfclt.yaml
+model:
+  encoder: {dfca: {num_bands: 4}}
+output_dir: outputs/rgbt_tiny_t6_b4

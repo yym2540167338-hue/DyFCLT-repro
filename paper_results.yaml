@@ -1,0 +1,34 @@
+# Numbers reported in Li et al., "DyFCLT", CVPR 2026 (open-access version, pp. 11313-11323).
+# Keys match the metric names produced by tools/test.py for each protocol.
+rgbt_tiny:            # Table 1 (SAFit-based, thermal GT). t=[1,8^2), et=[8^2,16^2), s, m, l
+  protocol: safit
+  params_M: 85.5
+  dyfclt: {AP: 48.2, AP50: 69.1, AP_tiny: 41.3, AP_extremely_small: 52.8, AP_small: 61.5, AP_medium: 49.1, AP_large: 100.0, AR: 63.2}
+  best_prior_rgbt: {method: M2D-LIF, AP: 38.7, AP50: 54.9, AP_tiny: 29.0, AP_extremely_small: 45.6, AP_small: 56.9, AP_medium: 50.4, AP_large: 90.0, AR: 51.7}
+  ablation_table4:    # AP, AP50, AP_tiny
+    t4_none: {AP: 45.4, AP50: 65.9, AP_tiny: 36.6}
+    t4_dfca: {AP: 46.8, AP50: 67.5, AP_tiny: 37.8}
+    t4_sse: {AP: 46.9, AP50: 67.4, AP_tiny: 39.7}
+    t4_dfca_ibs: {AP: 47.4, AP50: 68.2, AP_tiny: 40.1}
+    dyfclt: {AP: 48.2, AP50: 69.1, AP_tiny: 41.3}
+  ablation_table5:
+    t5_none: {AP: 46.1, AP50: 66.5, AP_tiny: 37.5}
+    t5_q: {AP: 45.2, AP50: 66.0, AP_tiny: 37.3}
+    t5_qk: {AP: 47.1, AP50: 67.8, AP_tiny: 39.3}
+    t5_kv: {AP: 46.8, AP50: 67.8, AP_tiny: 38.1}
+    dyfclt: {AP: 48.2, AP50: 69.1, AP_tiny: 41.3}
+  ablation_table6:
+    t5_none: {AP: 46.1, AP50: 66.5, AP_tiny: 37.5}      # B=1
+    t6_b2: {AP: 46.4, AP50: 66.7, AP_tiny: 37.8}
+    dyfclt: {AP: 48.2, AP50: 69.1, AP_tiny: 41.3}       # B=3 learnable
+    t6_b3_static: {AP: 46.5, AP50: 67.3, AP_tiny: 37.4}
+    t6_b4: {AP: 47.0, AP50: 67.4, AP_tiny: 39.0}
+droneperson:          # Table 2 (QFDet protocol): AP50 all / tiny / small
+  protocol: tinyperson
+  dyfclt: {AP50: 61.0, AP50_tiny: 62.4, AP50_small: 35.1}
+  best_prior_rgbt: {method: COXNet, AP50: 45.5, AP50_tiny: 47.1, AP50_small: 29.7}
+  qfdet: {AP50: 42.1, AP50_tiny: 44.0, AP50_small: 26.8}
+flir:                 # Table 3 (standard COCO)
+  protocol: coco
+  dyfclt: {AP50: 84.1, AP: 45.0}
+  best_prior_rgbt: {method: FD2Net, AP50: 82.9}

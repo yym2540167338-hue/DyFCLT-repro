@@ -1,0 +1,4 @@
+_base_: dyfclt.yaml
+model:
+  encoder: {use_dfca: false, use_ibs: false, use_fref: false, use_pan: true}
+output_dir: outputs/flir_baseline

@@ -1,0 +1,53 @@
+{
+ "config": "configs/smoke/droneperson_learncheck.yaml",
+ "ckpt": "outputs/learncheck_droneperson_dyfclt/best.pth",
+ "protocol": "tinyperson",
+ "metrics": {
+  "AP25": 18.307,
+  "AP25_tiny": 17.769,
+  "AP25_tiny1": 59.732,
+  "AP25_tiny2": 35.356,
+  "AP25_tiny3": 17.398,
+  "AP25_small": 43.604,
+  "AP25_reasonable": 31.023,
+  "AP50": 11.673,
+  "AP50_tiny": 11.586,
+  "AP50_tiny1": 17.76,
+  "AP50_tiny2": 20.1,
+  "AP50_tiny3": 12.503,
+  "AP50_small": 11.346,
+  "AP50_reasonable": 31.023,
+  "AP75": 1.003,
+  "AP75_tiny": 0.714,
+  "AP75_tiny1": 0.0,
+  "AP75_tiny2": 0.896,
+  "AP75_tiny3": 0.964,
+  "AP75_small": 2.57,
+  "AP75_reasonable": 12.871,
+  "AR50": 69.166,
+  "per_class_AP50": {
+   "person": 19.571,
+   "rider": 4.612,
+   "crowd": 10.836
+  },
+  "params_M": 84.07,
+  "band_boundaries": {
+   "encoder.ir.dfca.0.fbd": [
+    0.1226,
+    0.2471
+   ],
+   "encoder.ir.dfca.1.fbd": [
+    0.1221,
+    0.2503
+   ],
+   "encoder.vis.dfca.0.fbd": [
+    0.1274,
+    0.2497
+   ],
+   "encoder.vis.dfca.1.fbd": [
+    0.1247,
+    0.2533
+   ]
+  }
+ }
+}

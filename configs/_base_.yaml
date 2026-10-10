@@ -1,0 +1,95 @@
+# Shared defaults: RT-DETR-R50 recipe (the paper keeps "all other settings ... the same as in
+# RT-DETR") + DyFCLT modules + paper Sec. 4.2 hyper-parameters.
+# [P] = stated in the paper, [R] = RT-DETR default, [I] = inferred (see REPRODUCTION_NOTES.md)
+seed: 0
+num_workers: 4
+
+model:
+  backbone:            # [P] pretrained ResNet50 for both branches; [R] PResNet50-vd, frozen BN, frozen stem
+    type: presnet
+    depth: 50
+    variant: d
+    return_idx: [1, 2, 3]   # [P] L = 3 feature levels (strides 8/16/32)
+    freeze_at: 0
+    freeze_norm: true
+    pretrained: true
+    pretrained_path: null   # set to a local .pth on servers without internet
+  encoder:
+    hidden_dim: 256
+    nhead: 8
+    dim_feedforward: 1024
+    dropout: 0.0
+    enc_act: gelu
+    num_encoder_layers: 1
+    act: silu
+    expansion: 1.0
+    depth_mult: 1.0
+    use_dfca: true     # [P] Table 4
+    use_ibs: true      # [P] Table 4
+    use_fref: true     # [P] Table 4
+    use_pan: false     # [I] Fig. 2(a) shows no bottom-up path
+    dfca:
+      num_bands: 3            # [P] B = 3
+      learnable_bands: true   # [P] dynamic bands, octave init {0, 1/8, 1/4, 1/2}
+      decouple: qkv           # [P] Table 5 best
+      mask_mode: soft         # [I] soft | ste | hard
+      band_temperature: 1.0   # [I] transition width in frequency-grid steps
+      mod_kernel: 3           # [P] 3x3 modulation conv (Eq. 4)
+      mod_groups: 1           # [I] full conv
+    sse:
+      reduction: 2     # [I] r (closest to the paper's 85.5M params)
+      up_kernel: 5     # [I] K (CARAFE default)
+      mask_kernel: 3   # [I]
+  decoder:             # [R]/[P] decoder layers and queries kept as RT-DETR
+    hidden_dim: 256
+    num_queries: 300
+    num_levels: 3
+    num_decoder_points: 4
+    nhead: 8
+    num_decoder_layers: 6
+    dim_feedforward: 1024
+    dropout: 0.0
+    activation: relu
+    num_denoising: 100
+    label_noise_ratio: 0.5
+    box_noise_scale: 1.0
+    eval_idx: -1
+  multi_scale: [480, 512, 544, 576, 608, 640, 640, 640, 672, 704, 736, 768, 800]  # [P] "random resize" / [R] sizes
+
+criterion:             # [R]
+  matcher: {cost_class: 2.0, cost_bbox: 5.0, cost_giou: 2.0, use_focal_loss: true, alpha: 0.25, gamma: 2.0}
+  weight_dict: {loss_vfl: 1.0, loss_bbox: 5.0, loss_giou: 2.0, loss_mask: 1.0}   # loss_mask weight [I]
+  losses: [vfl, boxes]
+  alpha: 0.75
+  gamma: 2.0
+  mask_loss: {alpha: 0.7, beta: 0.3, gamma: 1.3333333}   # [P] focal Tversky loss; [I] its paper defaults
+
+postprocess: {num_top_queries: 300}
+
+optimizer:
+  lr: 0.00025          # [P] 0.00025 on all datasets
+  backbone_lr: 0.000025   # [R] 0.1 x lr
+  weight_decay: 0.0001    # [R]
+  betas: [0.9, 0.999]
+
+train:
+  epochs: 20           # [P] RGBT-Tiny / RGBTDronePerson: 20, FLIR: 50
+  batch_size: 8        # [I] total batch size over all GPUs (paper: one A100)
+  clip_max_norm: 0.1   # [R]
+  warmup_iters: 2000   # [I] linear warm-up (RT-DETRv2 default)
+  lr_milestones: []    # [R] constant LR
+  amp: none            # none | bf16 | fp16 (DFCA FFTs always run in fp32)
+  print_freq: 50
+  find_unused_parameters: false
+
+use_ema: true          # [R]
+ema: {decay: 0.9999, warmups: 2000}
+
+data:
+  input_size: [640, 640]   # [R]
+  normalize: null          # [R] RT-DETR feeds [0,1] images to PResNet; use "imagenet" with torchvision backbone
+  train_aug: {iou_crop_p: 0.8, hflip_p: 0.5, min_box_size: 1.0}   # [P] crop + flip (+ multi-scale above)
+
+eval:
+  batch_size: 8
+  interval: 1

@@ -1,0 +1,5 @@
+# Table 4 row 3: SSE (IBS + FREF) only
+_base_: ../dyfclt.yaml
+model:
+  encoder: {use_dfca: false}
+output_dir: outputs/rgbt_tiny_t4_sse

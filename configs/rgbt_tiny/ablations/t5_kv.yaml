@@ -1,0 +1,5 @@
+# Table 5 'Key&Value'
+_base_: ../dyfclt.yaml
+model:
+  encoder: {dfca: {decouple: kv}}
+output_dir: outputs/rgbt_tiny_t5_kv

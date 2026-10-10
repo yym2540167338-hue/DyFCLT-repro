@@ -1,0 +1,17 @@
+# datasets, pretrained weights and checkpoints (large; README explains how to obtain them)
+data/
+pretrained/
+*.pth
+*.pt
+
+# training outputs: keep only the text records of the local learning check cited in RESULTS.md
+outputs/*
+!outputs/learncheck_droneperson_dyfclt/
+
+# local environment / download logs
+logs/
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store

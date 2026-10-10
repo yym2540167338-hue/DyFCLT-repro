@@ -1,0 +1,12 @@
+# Exercise the torchrun/DDP code path on CPU (gloo): torchrun --nproc_per_node=2 tools/train.py -c configs/smoke/ddp_cpu_smoke.yaml
+_base_: droneperson_smoke.yaml
+num_workers: 0
+model:
+  backbone: {pretrained: false}
+data:
+  input_size: [256, 256]
+  train: {max_images: 12}
+  val: {max_images: 10}
+train: {epochs: 2, batch_size: 4, print_freq: 1}
+eval: {batch_size: 2}
+output_dir: outputs/ddp_cpu_smoke

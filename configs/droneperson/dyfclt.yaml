@@ -1,0 +1,11 @@
+# RGBTDronePerson (paper Table 2). Official QFDet protocol: 3 classes, thermal annotations.
+_base_: ../_base_.yaml
+num_classes: 3
+class_names: [person, rider, crowd]
+data:
+  img_root: data/RGBTDronePerson
+  train: {ann_file: data/RGBTDronePerson/annotations/train_paired.json}
+  val: {ann_file: data/RGBTDronePerson/annotations/val_paired.json}
+train: {epochs: 20}
+eval: {protocol: tinyperson, key_metric: AP50}
+output_dir: outputs/droneperson_dyfclt

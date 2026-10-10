@@ -1,0 +1,10 @@
+# Install PyTorch first, matching your CUDA driver (see environment/setup_server_cuda.sh):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+# Tested locally with torch 2.14.1 / torchvision 0.29.1 (macOS, MPS). Any torch >= 2.1 should work.
+numpy
+scipy
+pycocotools
+pyyaml
+pillow
+gdown        # dataset download from Google Drive
+pytest       # optional, for tests/

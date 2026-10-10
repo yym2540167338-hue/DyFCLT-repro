@@ -1,0 +1,5 @@
+# Table 5 'None' (= Table 6 B=1): no band decomposition
+_base_: ../dyfclt.yaml
+model:
+  encoder: {dfca: {decouple: none}}
+output_dir: outputs/rgbt_tiny_t5_none

@@ -1,0 +1,11 @@
+# Local pipeline check on a few RGBTDronePerson images (NOT a reproduction setting).
+_base_: ../droneperson/dyfclt.yaml
+num_workers: 2
+model: {multi_scale: null}
+data:
+  input_size: [320, 320]
+  train: {max_images: 32}
+  val: {max_images: 16}
+train: {epochs: 1, batch_size: 2, warmup_iters: 0, print_freq: 4}
+eval: {batch_size: 4}
+output_dir: outputs/smoke

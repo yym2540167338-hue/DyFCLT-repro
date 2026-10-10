@@ -1,0 +1,5 @@
+# Table 5 'Query only'
+_base_: ../dyfclt.yaml
+model:
+  encoder: {dfca: {decouple: q}}
+output_dir: outputs/rgbt_tiny_t5_q

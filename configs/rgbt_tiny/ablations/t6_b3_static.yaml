@@ -1,0 +1,5 @@
+# Table 6: B=3 static bands
+_base_: ../dyfclt.yaml
+model:
+  encoder: {dfca: {learnable_bands: false}}
+output_dir: outputs/rgbt_tiny_t6_b3_static
